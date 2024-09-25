@@ -28,7 +28,7 @@ capital_value = invoice_amount * (capital_percentage / 100)
 st.markdown("<h3 style='text-align: center;'>📊 النتائج</h3>", unsafe_allow_html=True)
 
 # استخدام st.metric لعرض النتائج بالألوان
-st.metric(label="💼 نسبة الفائدة", delta=f"{profit_percentage:.2f}%", delta_color="normal")
+st.metric(label="💼 نسبة الفائدة",value=f"{profit_percentage:.2f}%", delta=f"{profit_percentage:.2f}%", delta_color="normal")
 st.metric(label="💰 قيمة الفائدة", value=f"{profit_value:.2f} DZD", delta=f"{profit_value:.2f}", delta_color="inverse")
 
 st.metric(label="🏦 نسبة رأس المال", value=f"{capital_percentage:.2f}%", delta=f"{capital_percentage:.2f}%", delta_color="normal")
