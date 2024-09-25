@@ -1,151 +1,40 @@
 import streamlit as st
-import pandas as pd
-import math
-from pathlib import Path
 
-# Set the title and favicon that appear in the Browser's tab bar.
-st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
-)
+# يجب أن يكون استدعاء set_page_config أول سطر في البرنامج
+st.set_page_config(page_title="حاسبة الفائدة ورأس المال", page_icon="💰", layout="centered")
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
+# تنسيق الهيدر
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>حاسبة الفائدة ورأس المال 💰</h1>", unsafe_allow_html=True)
 
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
+# إدخال القيم المتغيرة من خلال واجهة Streamlit
+st.markdown("<h3 style='text-align: center;'>أدخل المعطيات</h3>", unsafe_allow_html=True)
+selling_price = st.number_input("🟢 أدخل مبلغ البيع", min_value=0.0, value=24000.0)
+buying_price = st.number_input("🔵 أدخل مبلغ الشراء", min_value=0.0, value=17000.0)
+invoice_amount = st.number_input("🟡 أدخل مبلغ الفاتورة", min_value=0.0, value=1000.0)
 
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-    """
+# حساب نسبة الفائدة
+profit_percentage = (selling_price - buying_price) / selling_price * 100
 
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
+# حساب نسبة رأس المال
+capital_percentage = 100 - profit_percentage
 
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
+# حساب قيمة الفائدة
+profit_value = invoice_amount * (profit_percentage / 100)
 
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
+# حساب قيمة رأس المال
+capital_value = invoice_amount * (capital_percentage / 100)
 
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
+# عرض النتائج باستخدام Streamlit
+st.markdown("<h3 style='text-align: center;'>📊 النتائج</h3>", unsafe_allow_html=True)
 
-    return gdp_df
+# استخدام st.metric لعرض النتائج بالألوان
+st.metric(label="💼 نسبة الفائدة", value=f"{profit_percentage:.2f}%", delta=f"{profit_percentage:.2f}%", delta_color="normal")
+st.metric(label="💰 قيمة الفائدة", value=f"{profit_value:.2f} DZD", delta=f"{profit_value:.2f}", delta_color="inverse")
 
-gdp_df = get_gdp_data()
+st.metric(label="🏦 نسبة رأس المال", value=f"{capital_percentage:.2f}%", delta=f"{capital_percentage:.2f}%", delta_color="normal")
+st.metric(label="💵 قيمة رأس المال", value=f"{capital_value:.2f} DZD", delta=f"{capital_value:.2f}", delta_color="inverse")
 
-# -----------------------------------------------------------------------------
-# Draw the actual page
+# تخصيص نهاية الصفحة
+st.markdown("<hr style='border:2px solid #4CAF50'>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center;'>تم تطويره بواسطة Al Nour Elite 🌟</h4>", unsafe_allow_html=True)
 
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
-
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
-
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
-)
-
-''
-''
-
-
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
-
-st.header(f'GDP in {to_year}', divider='gray')
-
-''
-
-cols = st.columns(4)
-
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
-
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
-        else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
-
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
