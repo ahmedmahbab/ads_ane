@@ -8,8 +8,8 @@ st.markdown("<h1 style='text-align: center; color: #4CAF50; font-size: 50px;'>ح
 
 # إدخال القيم المتغيرة من خلال واجهة Streamlit
 st.markdown("<h3 style='text-align: center; font-size: 24px;'>أدخل المعطيات</h3>", unsafe_allow_html=True)
-selling_price = st.number_input("🟢 أدخل مبلغ البيع", min_value=0.0, value=24000.0)
-buying_price = st.number_input("🔵 أدخل مبلغ الشراء", min_value=0.0, value=17000.0)
+selling_price = st.number_input("🟢 أدخل مبلغ البيع", min_value=0.0, value=330.0)
+buying_price = st.number_input("🔵 أدخل مبلغ الشراء", min_value=0.0, value=235.0)
 invoice_amount = st.number_input("🟡 أدخل مبلغ الفاتورة", min_value=0.0, value=1000.0)
 
 # حساب نسبة الفائدة
