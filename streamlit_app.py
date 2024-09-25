@@ -8,8 +8,8 @@ st.markdown("<h1 style='text-align: center; color: #4CAF50;'>حاسبة الفا
 
 # إدخال القيم المتغيرة من خلال واجهة Streamlit
 st.markdown("<h3 style='text-align: center;'>أدخل المعطيات</h3>", unsafe_allow_html=True)
-selling_price = st.number_input("🟢 أدخل مبلغ البيع", min_value=0.0, value=330.0)
-buying_price = st.number_input("🔵 أدخل مبلغ الشراء", min_value=0.0, value=235.0)
+selling_price = st.number_input("🟢 أدخل مبلغ البيع", min_value=0.0, value=24000.0)
+buying_price = st.number_input("🔵 أدخل مبلغ الشراء", min_value=0.0, value=17000.0)
 invoice_amount = st.number_input("🟡 أدخل مبلغ الفاتورة", min_value=0.0, value=1000.0)
 
 # حساب نسبة الفائدة
@@ -27,13 +27,19 @@ capital_value = invoice_amount * (capital_percentage / 100)
 # عرض النتائج باستخدام Streamlit
 st.markdown("<h3 style='text-align: center;'>📊 النتائج</h3>", unsafe_allow_html=True)
 
-# استخدام st.metric لعرض النتائج بالألوان
-st.metric(label="💼 نسبة الفائدة",value=f"{profit_percentage:.2f}%", delta=f"{profit_percentage:.2f}%", delta_color="normal")
-st.metric(label="💰 قيمة الفائدة", value=f"{profit_value:.2f} DZD", delta=f"{profit_value:.2f}", delta_color="inverse")
+# عرض نسبة الفائدة باللون الأحمر مع السهم
+st.markdown(f"<p style='color:red; text-align: center;'>🔻 نسبة الفائدة: {profit_percentage:.2f}%</p>", unsafe_allow_html=True)
 
-st.metric(label="🏦 نسبة رأس المال", value=f"{capital_percentage:.2f}%", delta=f"{capital_percentage:.2f}%", delta_color="normal")
-st.metric(label="💵 قيمة رأس المال", value=f"{capital_value:.2f} DZD", delta=f"{capital_value:.2f}", delta_color="inverse")
+# عرض قيمة الفائدة
+st.write(f"💰 قيمة الفائدة: {profit_value:.2f} DZD")
+
+# عرض نسبة رأس المال باللون الأخضر مع السهم
+st.markdown(f"<p style='color:green; text-align: center;'>🔺 نسبة رأس المال: {capital_percentage:.2f}%</p>", unsafe_allow_html=True)
+
+# عرض قيمة رأس المال
+st.write(f"💵 قيمة رأس المال: {capital_value:.2f} DZD")
 
 # تخصيص نهاية الصفحة
 st.markdown("<hr style='border:2px solid #4CAF50'>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center;'>تم تطويره بواسطة Al Nour Elite 🌟</h4>", unsafe_allow_html=True)
+
