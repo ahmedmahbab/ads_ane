@@ -28,13 +28,13 @@ capital_value = invoice_amount * (capital_percentage / 100)
 st.markdown("<h3 style='text-align: center; font-size: 28px;'>📊 النتائج</h3>", unsafe_allow_html=True)
 
 # عرض نسبة الفائدة باللون الأحمر مع تكبير الخط
-st.markdown(f"<p style='color:red; text-align: center; font-size: 18px;'>🔻 نسبة الفائدة: {profit_percentage:.2f}%</p>", unsafe_allow_html=True)
+st.markdown(f"<p style='color:red; text-align: center; font-size: 16px;'>🔻 نسبة الفائدة: {profit_percentage:.2f} % </p>", unsafe_allow_html=True)
 
 # عرض قيمة الفائدة مع تكبير الخط
 st.markdown(f"<p style='text-align: center; font-size: 22px;'>💰 <strong>قيمة الفائدة:</strong> {profit_value:.2f} DZD</p>", unsafe_allow_html=True)
 
 # عرض نسبة رأس المال باللون الأخضر مع تكبير الخط
-st.markdown(f"<p style='color:green; text-align: center; font-size: 18px;'>🔺 نسبة رأس المال: {capital_percentage:.2f}%</p>", unsafe_allow_html=True)
+st.markdown(f"<p style='color:green; text-align: center; font-size: 16px;'>🔺 نسبة رأس المال: {capital_percentage:.2f}%</p>", unsafe_allow_html=True)
 
 # عرض قيمة رأس المال مع تكبير الخط
 st.markdown(f"<p style='text-align: center; font-size: 22px;'>💵 <strong>قيمة رأس المال:</strong> {capital_value:.2f} DZD</p>", unsafe_allow_html=True)
